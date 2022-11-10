@@ -1,0 +1,43 @@
+library IEEE;
+
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+entity Memorytest is
+	port(address: in std_logic_vector(7 downto 0);
+	     data_in, port_in_00, port_in_01, port_in_02, port_in_03 : in std_logic_vector(7 downto 0);
+		  writen: in std_logic;
+		  clock: in std_logic;
+		  reset: in std_logic;
+		  port_out_00, port_out_01, port_out_02, port_out_03: out std_logic_vector(7 downto 0);
+		  display_0, display_1, display_2, display_3: out std_logic_vector(6 downto 0));
+		  
+end Memorytest;  
+architecture memorytest_arch of memorytest is
+
+	signal data_out : std_logic_vector (7 downto 0);
+	
+	component Memoria
+	
+		port(address, data_in, port_in_00, port_in_01, port_in_02, port_in_03 : in std_logic_vector (7 downto 0);
+				writen, clock, reset : in std_logic;
+				data_out, port_out_00, port_out_01, port_out_02, port_out_03 : out std_logic_vector (7 downto 0));
+				
+	end component;
+	
+	component jkk
+	
+		port(A, B, C, D : in std_logic;
+				F : out std_logic_vector (6 downto 0));
+		
+	end component;
+	
+begin
+	
+U1 : Memoria port map (address, data_in, port_in_00, port_in_01, port_in_02, port_in_03, writen, clock, reset, data_out, port_out_00, port_out_01, port_out_02, port_out_03);
+U2 : jkk port map (data_out(3), data_out(2), data_out(1), data_out(0), display_0);
+U3 : jkk port map (data_out(7), data_out(6), data_out(5), data_out(4), display_1);
+U4 : jkk port map (address(3), address(2), address(1), address(0), display_2);
+U5 : jkk port map (address(7), address(6), address(5), address(4), display_3);
+
+end memorytest_arch;
